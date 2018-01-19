@@ -70,3 +70,24 @@ def update_progress(progress):
                percentage progress
     """
     print('\r[%-10s] %0.2f%%' % ('#' * int(progress/10), progress))
+    
+
+
+def normalize_ssn(row, ssn_col="SSN"):
+    """ 
+    Normalize a SSN column. 
+    
+    This function normalizes towards a string made from an integer of form:
+    
+    "1234567"
+    
+    Removing dashes (e.g. "123-456-789") or floats (e.g., "123456789.0").
+    
+    """
+    try:
+        return str(int(row[ssn_col]))
+    except:
+        try: 
+            return str(int(''.join(row[ssn_col].split('-'))))
+        except: 
+            return None

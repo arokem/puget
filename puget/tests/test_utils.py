@@ -45,3 +45,13 @@ def test_merge_destination():
     pdt.assert_frame_equal(df_merge, df_test)
 
     TF.close()
+
+    
+def test_normalize_ssn():
+
+    df = pd.DataFrame({"SSN": ["123-456-789", 123456789.0, "*23456789"]})
+    
+    df["SSN"] = df.apply(pu.normalize_ssn, axis=1)
+    df_test = pd.DataFrame({"SSN": ["123456789", "123456789", None]})
+    pdt.assert_frame_equal(df, df_test)
+    

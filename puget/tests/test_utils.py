@@ -50,8 +50,24 @@ def test_merge_destination():
 def test_normalize_ssn():
 
     df = pd.DataFrame({"SSN": ["123-456-789", 123456789.0, "*23456789"]})
-    
     df["SSN"] = df.apply(pu.normalize_ssn, axis=1)
     df_test = pd.DataFrame({"SSN": ["123456789", "123456789", None]})
     pdt.assert_frame_equal(df, df_test)
+
+    df = pd.DataFrame({"foo": ["123-456-789", 123456789.0, "*23456789"]})
+    df["foo"] = df.apply(pu.normalize_ssn, axis=1, ssn_col="foo")
+    df_test = pd.DataFrame({"foo": ["123456789", "123456789", None]})
+    pdt.assert_frame_equal(df, df_test)
+
+    
+def test_normalize_date():
+    df = pd.DataFrame({"dob": [" 12/09/1977", " 12/09/1977", "foo"]})
+    df["dob"] = df.apply(pu.normalize_date, axis=1, date_col="dob")
+    df_test = pd.DataFrame({"dob": [pd.Timestamp('1977-12-09 00:00:00'),
+                                    pd.Timestamp('1977-12-09 00:00:00'),
+                                    None]})
+    pdt.assert_frame_equal(df, df_test)
+
+    
+
     

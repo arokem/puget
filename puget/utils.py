@@ -2,6 +2,7 @@ import pandas as pd
 import os.path as op
 import numpy as np
 from puget.data import DATA_PATH
+from dateutil.parser import parse as parse_date
 
 METADATA = op.join(DATA_PATH, 'metadata')
 
@@ -91,3 +92,16 @@ def normalize_ssn(row, ssn_col="SSN"):
             return str(int(''.join(row[ssn_col].split('-'))))
         except: 
             return None
+
+        
+def normalize_date(row, date_col="DOB"):
+    """ 
+    Normalize a date column 
+    """
+    try:
+        return parse_date(row[date_col])
+    except:
+        return None
+    
+    
+  

@@ -94,14 +94,29 @@ def normalize_ssn(row, ssn_col="SSN"):
             return None
 
         
-def normalize_date(row, date_col="DOB"):
+def normalize_dates(row, date_col="DOB"):
     """ 
     Normalize a date column 
+    
+    Returns `parse_date` on each item in the column and None 
+    when an item cannot be parsed this way.
     """
     try:
         return parse_date(row[date_col])
     except:
         return None
     
+
+def compare_on_column(df1, df2, column):
+    """
+    Compare two data frames in terms of value counts on `column`.
+    """
+    comparison = pd.DataFrame(dict(df1=df1[column].value_counts(normalize=True),
+                                   df2=df2[column].value_counts(normalize=True)))
+    return comparison
+
+
+def normalize_names(row, name_col=""):  
+    return str(row[name_col]).upper()
     
   

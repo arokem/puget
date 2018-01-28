@@ -60,14 +60,42 @@ def test_normalize_ssn():
     pdt.assert_frame_equal(df, df_test)
 
     
-def test_normalize_date():
+def test_normalize_dates():
     df = pd.DataFrame({"dob": [" 12/09/1977", " 12/09/1977", "foo"]})
-    df["dob"] = df.apply(pu.normalize_date, axis=1, date_col="dob")
+    df["dob"] = df.apply(pu.normalize_dates, axis=1, date_col="dob")
     df_test = pd.DataFrame({"dob": [pd.Timestamp('1977-12-09 00:00:00'),
                                     pd.Timestamp('1977-12-09 00:00:00'),
                                     None]})
     pdt.assert_frame_equal(df, df_test)
 
     
+def test_compare_on_column():
+    df1 = pd.DataFrame({'col1': [1, 1, 1, 2, 2, 2], 
+                       'col2': [1, 1, 2, 2, 2, 2]})
+    df2 = pd.DataFrame({'col1': [1, 1, 2, 2], 
+                        'col2': [1, 1, 1, 2]})
+    df_compare = pu.compare_on_column(df1, df2, 'col1')
+    df_test = pd.DataFrame(index=[2, 1],
+                           data=dict(df1={1:0.5, 2:0.5},
+                                     df2={1:0.5, 2:0.5})) 
+    
+    pdt.assert_frame_equal(df_compare, df_test)
+
+    df_compare = pu.compare_on_column(df1, df2, 'col2')
+    df_test = pd.DataFrame(index=[1, 2],
+                           data=dict(df1={1:1/3., 2:2/3.},
+                                     df2={1:0.75, 2:0.25})) 
+    
+    pdt.assert_frame_equal(df_compare, df_test)
 
     
+def test_normalize_names():
+    df = pd.DataFrame({"Name":["Calliope", "Clio", "Erato", 
+                               "Euterpe", "Melpomene", "Polyhymnia",
+                               "Terpsichore", "Thalia"]})
+
+    df["norm_names"] = df.apply(pu.normalize_names, axis=1, name_col="Name")
+    
+    df["norm_names"] = pd.Series(['CALLIOPE', 'CLIO','ERATO',
+                                  'EUTERPE', 'MELPOMENE', 'POLYHYMNIA',
+                                  'TERPSICHORE', 'THALIA'])                           

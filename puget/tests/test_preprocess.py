@@ -81,11 +81,13 @@ def test_read_table():
     temp_csv_file.close()
 
     # test error checking
-    pytest.raises(ValueError, pp.read_table, file_spec,
-                  data_dir=op.join(pp.DATA_PATH, 'king'))
+    with pytest.raises(ValueError):
+        pp.read_table(file_spec,
+                      data_dir=op.join(pp.DATA_PATH, 'king'))
 
     # test error checking
-    pytest.raises(ValueError, pp.read_table, 'test', data_dir=None, paths=None)
+    with pytest.raises(ValueError):
+        pp.read_table('test', data_dir=None, paths=None)
 
 
 def test_read_entry_exit():
@@ -784,7 +786,8 @@ def test_merge():
                                                              '2011-12-05',
                                                              '2011-09-10']),
                                 'DestinationNumeric': [12., 27., 20, 10],
-                                'DestinationDescription': ['Staying or living with family, temporary tenure (e.g., room, apartment or house)',
+                                'DestinationDescription': [
+                                    'Staying or living with family, temporary tenure (e.g., room, apartment or house)',
                                                            'Moved from one HOPWA funded project to HOPWA TH',
                                                            'Rental by client, with other ongoing housing subsidy',
                                                            'Rental by client, no ongoing housing subsidy'],
